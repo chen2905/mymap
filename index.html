@@ -24,28 +24,54 @@
                 center:{lat:-33.8688,lng:151.2093}
             }
             let map = new google.maps.Map(document.querySelector('#map'),options)
-            //add markers
+            
+           //listen for click on map
+           google.maps.event.addListener(map,'click',function(e){
+            addMarker({
+                coords:e.latLng,
+                iconImage:'parking_lot_maps.png',
+            })
+           }) 
+           
+            const coords =[
+            {
+               coords:{lat:-33.871209, lng: 151.214862},
+               iconImage:'parking_lot_maps.png',
+               title:'Domain car park',
+               content:'<h1>Domain car park</h1>'
+               } ,
+               {
+               coords:{lat:-33.871961, lng: 151.216449},
+               iconImage:'parking_lot_maps.png',
+               title:'Ecj Office',
+               content:'<h1>Domain car park</h1>'
+               }
+            ]
+
+               coords.forEach(coord=>{
+                addMarker(coord)
+               })
+
+     
+        function addMarker(pros){
             let iconBase = 'https://maps.google.com/mapfiles/kml/shapes/'
             let marker = new google.maps.Marker({
-                position:{
-                    lat:-33.871209, 
-                    lng: 151.214862,
-                },
-                title: 'DOMAIN car park',
+                position:pros.coords,
+                title: pros.title,
                 map:map,
-                icon: iconBase + 'parking_lot_maps.png'
+                icon: iconBase + pros.iconImage
             });
-            let ECJ = new google.maps.Marker({
-                position:{
-                    lat:-33.871961,
-                    lng: 151.216449
-                },
-                title: 'ECJ',
-                map:map,
 
-               
-            });
-            
+                if (pros.content){
+                    var infoWindow = new google.maps.InfoWindow({
+                    content:pros.content
+                     })     
+                     marker.addListener('click',()=>{
+                        infoWindow.open(map,marker)
+                    })   
+                }
+
+        }
         }
     </script>
     <script async defer
